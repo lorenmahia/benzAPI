@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Benz</title>
+    <!-- including Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <style>
+      #header{
+          position: relative;
+          top: 0;
+          text-align: center;
+          background-color: #000;
+          color: #fff;
+          min-height: 70px;
+      }
+  </style>
+    <script >
+        //ensures this function is run when page is opened
+      $(document).ready(function(){
+          //sending request to server
+         request = new XMLHttpRequest();
+         request.open("GET","https://api.mercedes-benz.com/configurator/v1/markets/de_DE/bodies?apikey=3e65129a-9061-4098-9ff8-ede8deaed350",true);
+         console.log(request.readyState);
+         //to ensure request has been sent and recieved
+         request.onreadystatechange = function(){
+             if(request.readyState == 4 && request.status == 200){
+                 name = request.responseText;
+                // alert(name); to ensure name is read properly 
+                 car = JSON.parse(name);
+                 for(var i = 0; i < 18; i++){
+                 document.getElementById("display").innerHTML += car[i]["bodyId"] + " " + car[i]["bodyName"] + " " +
+                 car[i]["context"]["market"]["marketId"]  + " " + car[i]["context"]["market"]["country"]  + " " +
+                 car[i]["context"]["market"]["language"] + " " +  "<br>";
+                 }
+             }
+         }
+         request.send();
+      });
+    </script>
+
+</head>
+<body>
+    <div id="header">
+        <h1>Benz API by Loren </h1>
+    </div>
+    <div style="text-align: center;">
+        <p>This API is from the Merecdez Benz website and shows Car Configuration data for 18 different types of cars 
+            the company produces. this API key specifically targets the bodies of the cars and states their body ID, the name, the context
+            in which this body can be used such as the market this car was produced for, the main language spoken there, the place where majority of 
+            sales come in and the car Configuration date. <br>
+            This JSOn data also includes a link to the specific cars own API in case you would like to access a specific car in stead of a general case 
+            like the one here. <br>
+            All this information was found on the official Mercedez Benz website
+             cited as: https://developer.mercedes-benz.com/products/car_configurator/docs <br>
+             <br> <br>
+            To use this API, I created a new http request and saved it in the request variable. Then I used the open method to GET the data from 
+            the website using the API key they provided after I signed up. 
+            I then parsed the data and viewed the data to understand how it was arranged as a JSON object. It was difficult to pin point the actual array 
+            sequence but I was able to indentify a pattern. 
+            The data is arranges such that all data from a single car is in one line to avoid confusion. 
+            <br> <br>
+            This data can be useful when: <br>
+            1. In a car sales business, The client on your website wants to know specifics about the car such as the year it was configured, and 
+            how the body type differes from other types of cars. <br>
+            2. This data can also be used by insurace companies to write insurance contracts based on age and bodytype. 
+        </p>
+        <h2>Question</h2>
+        <p>
+            The most challenging thing was decoding the JSON file and arranging the JSON data well on the website <br>
+            The most satisfying thing was that I got to use API and AJAX with something That i actually love , cars, and 
+            arranges the data well on the page.
+        </p>
+        <h2>Car Data in Json format</h2>
+    </div>
+    <!-- where the actal JSON data will be displayed -->
+    <div id="display"></div>
+</body>
+</html>
